@@ -65,8 +65,8 @@ RUN groupadd --force -g $WWWGROUP octane \
     && useradd -ms /bin/bash --no-log-init --no-user-group -g $WWWGROUP -u $WWWUSER octane
 
 # copy php config files into container
-COPY containerize/php/php.ini /usr/local/etc/php/conf.d/octane.ini
-COPY containerize/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY laravel-containerized/php/php.ini /usr/local/etc/php/conf.d/octane.ini
+COPY laravel-containerized/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY . .
 
@@ -76,14 +76,14 @@ RUN chmod +x containerize/scripts/app-entrypoint.sh
 # create bootstrap and storage files if they do not exist
 # gives the 'octane' user read/write and execute privileges to those files
 RUN mkdir -p \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/framework/cache/data \
-    storage/logs \
-    bootstrap/cache \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/framework/cache/data \
+        storage/logs \
+        bootstrap/cache \
     && chown -R octane:octane \
-    storage \
-    bootstrap/cache \
+        storage \
+        bootstrap/cache \
     && chmod -R ug+rwx storage bootstrap/cache
 
 # copy dependencies from another stage
@@ -94,7 +94,7 @@ EXPOSE 9000
 
 USER octane
 
-ENTRYPOINT ["containerize/scripts/app-entrypoint.sh"]
+ENTRYPOINT ["laravel-containerized/scripts/app-entrypoint.sh"]
 
 HEALTHCHECK --start-period=5s --interval=30s --timeout=5s --retries=8 \
     CMD curl --fail localhost:9000/up || exit 1

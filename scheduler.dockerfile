@@ -57,8 +57,8 @@ RUN addgroup -g $WWWGROUP -S scheduler || true \
     && adduser -D -h /home/scheduler -s /bin/ash -G scheduler -u $WWWUSER scheduler
 
 # copy supervisor and php config files into container
-COPY containerize/php/php.ini /usr/local/etc/php/conf.d/scheduler.ini
-COPY containerize/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY laravel-containerized/php/php.ini /usr/local/etc/php/conf.d/scheduler.ini
+COPY laravel-containerized/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # set supercronic for schedules
 # download the corresponding files according to the different architectures.

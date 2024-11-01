@@ -66,22 +66,22 @@ RUN addgroup -g $WWWGROUP -S queue || true \
     && adduser -D -h /home/queue -s /bin/ash -G queue -u $WWWUSER queue
 
 # copy supervisor and php config files into container
-COPY containerize/php/php.ini /usr/local/etc/php/conf.d/queue.ini
-COPY containerize/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY laravel-containerized/php/php.ini /usr/local/etc/php/conf.d/queue.ini
+COPY laravel-containerized/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY . .
 
 # create bootstrap and storage files if they do not exist
 # gives the 'queue' user read/write and execute privileges to those files
 RUN mkdir -p \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/framework/cache/data \
-    storage/logs \
-    bootstrap/cache \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/framework/cache/data \
+        storage/logs \
+        bootstrap/cache \
     && chown -R queue:queue \
-    storage \
-    bootstrap/cache \
+        storage \
+        bootstrap/cache \
     && chmod -R ug+rwx storage bootstrap/cache
 
 # copy dependencies from another stage
