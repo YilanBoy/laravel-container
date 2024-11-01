@@ -71,7 +71,6 @@ COPY laravel-container/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY . .
 
 # set scripts to start the laravel octane app
-COPY laravel-container/scripts/app-entrypoint.sh laravel-container/scripts/app-entrypoint.sh
 RUN chmod +x laravel-container/scripts/app-entrypoint.sh
 
 # create bootstrap and storage files if they do not exist
