@@ -1,5 +1,5 @@
 ARG PHP_VERSION=8.3
-ARG SUPERCRONIC_VERSION=0.2.30
+ARG SUPERCRONIC_VERSION=0.2.33
 
 ###########################################
 # PHP Dependencies
@@ -57,19 +57,19 @@ RUN addgroup -g $WWWGROUP -S scheduler || true \
     && adduser -D -h /home/scheduler -s /bin/ash -G scheduler -u $WWWUSER scheduler
 
 # copy supervisor and php config files into container
-COPY laravel-containerized/php/php.ini /usr/local/etc/php/conf.d/scheduler.ini
-COPY laravel-containerized/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY laravel-container/php/php.ini /usr/local/etc/php/conf.d/scheduler.ini
+COPY laravel-container/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # set supercronic for schedules
 # download the corresponding files according to the different architectures.
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
-        wget -q "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64" \
-            -O /usr/bin/supercronic; \
+    wget -q "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64" \
+    -O /usr/bin/supercronic; \
     elif [ "$(uname -m)" = "aarch64" ]; then \
-        wget -q "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-arm64" \
-            -O /usr/bin/supercronic; \
+    wget -q "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-arm64" \
+    -O /usr/bin/supercronic; \
     else \
-        echo "Unsupported platform" && exit 1; \
+    echo "Unsupported platform" && exit 1; \
     fi \
     && chmod +x /usr/bin/supercronic \
     && mkdir -p /etc/supercronic \
@@ -80,14 +80,14 @@ COPY . .
 # create bootstrap and storage files if they do not exist
 # gives the 'scheduler' user read/write and execute privileges to those files
 RUN mkdir -p \
-        storage/framework/sessions \
-        storage/framework/views \
-        storage/framework/cache/data \
-        storage/logs \
-        bootstrap/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/framework/cache/data \
+    storage/logs \
+    bootstrap/cache \
     && chown -R scheduler:scheduler \
-        storage \
-        bootstrap/cache \
+    storage \
+    bootstrap/cache \
     && chmod -R ug+rwx storage bootstrap/cache
 
 # copy dependencies from another stage
